@@ -1,5 +1,6 @@
 package kisto.backend.entity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -47,5 +48,33 @@ public class Usuario {
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "remetente")
 	private Set<Mensagem> mensagems;
+	
+	
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+	
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
 
+	public void setAutorizacoes(HashSet<Autorizacao> autorizacoes) {
+		this.autorizacoes = autorizacoes;
+	}
+	
+	public Set<Autorizacao> getAutorizacoes() {
+		return this.autorizacoes;
+	}
+	
+	public void addAutorizacao(Autorizacao autorizacao) {
+		this.autorizacoes.add(autorizacao);
+	}
+
+	public Set<Conversa> getConversas() {
+		return this.conversas;
+	}
 }

@@ -29,5 +29,9 @@ public class Autorizacao {
 	@JoinTable(name = "aua_autorizacao_usuario",
 		joinColumns = { @JoinColumn(name = "aua_aut_id") },
 		inverseJoinColumns = { @JoinColumn(name = "aua_usr_id") })
-	private Set<Usuario> usuarios;	
+	private Set<Usuario> usuarios;
+	
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 }

@@ -30,4 +30,21 @@ public class Mensagem {
 	@JoinColumn(name = "msg_conversa_id")
 	private Conversa conversa;
 
+	public void setRemetente(Usuario remetente) {
+		this.remetente = remetente;
+	}
+
+	public void setConversa(Conversa conversa) {
+		this.conversa = conversa;
+	}
+
+	public Conversa getConversa() {
+		return this.conversa;
+	}
+
+	public void setTexto(String novoTexto) {
+		this.texto = texto;
+		
+	}
+
 }
