@@ -10,8 +10,8 @@ grant select, insert, delete, update on microchat_db .* to 'microchat_user'@'loc
 create table cnv_conversa ( 
 	cnv_id bigint unsigned not null auto_increment,
     cnv_assunto varchar(20) not null,
-    primary key (cnv_id),
-    unique key uni_cnv_assunto(cnv_assunto)
+    cnv_tipo varchar(20) not null,
+    primary key (cnv_id)
 );
 
 create table usr_usuario (
@@ -56,7 +56,7 @@ create table msg_mensagem (
     foreign key msg_cnv_fk (msg_conversa_id) references cnv_conversa(cnv_id)
 );
 
-insert into cnv_conversa (cnv_assunto) values("grupo_A");
+insert into cnv_conversa (cnv_assunto, cnv_tipo) values("grupo_A", "COLETIVA");
 insert into usr_usuario (usr_nickname, usr_email, usr_senha) values("joselito", "jose@teste.com", "$2y$12$GkqdLqBvtvnWR3xh50aQWOloIG5VRHBLVwOdMHmfwYUxLiokjiCta");
 insert into usr_usuario (usr_nickname, usr_email, usr_senha) values("maria", "maria@teste.com", "$2y$12$GkqdLqBvtvnWR3xh50aQWOloIG5VRHBLVwOdMHmfwYUxLiokjiCta");
 insert into usr_usuario (usr_nickname, usr_email, usr_senha) values("Bot", "bot@minichat.com.br", "$2y$12$GkqdLqBvtvnWR3xh50aQWOloIG5VRHBLVwOdMHmfwYUxLiokjiCta");
