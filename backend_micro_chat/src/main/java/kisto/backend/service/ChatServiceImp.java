@@ -1,4 +1,4 @@
-package Service;
+package kisto.backend.service;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -6,13 +6,15 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import Repository.ConversaRepository;
-import Repository.MensagemRepository;
-import Repository.UsuarioRepository;
 import kisto.backend.entity.Conversa;
 import kisto.backend.entity.Mensagem;
 import kisto.backend.entity.Usuario;
+import kisto.backend.repository.ConversaRepository;
+import kisto.backend.repository.MensagemRepository;
+import kisto.backend.repository.UsuarioRepository;
 import utils.TipoDeConversa;
+
+
 
 @Service("chatService")
 public class ChatServiceImp implements ChatService {
@@ -84,7 +86,7 @@ public class ChatServiceImp implements ChatService {
 		Mensagem mensagem = mensagemRepo.findById(mensagemId).get();
 		mensagem.setTexto(novoTexto);
 		mensagemRepo.save(mensagem);
-		return conversaRepo.findByMensagemId(mensagemId);
+		return conversaRepo.findByMensagemsId(mensagemId);
 	}
 
 }

@@ -1,4 +1,4 @@
-package Repository;
+package kisto.backend.repository;
 
 import java.util.Optional;
 import java.util.Set;
@@ -15,6 +15,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	
 	public Usuario findByEmail(String email);
 	
-	public Set<Usuario> findByConversaId(Long conversaId);
+	public Set<Usuario> findByConversasId(Long conversaId);
 	
 }

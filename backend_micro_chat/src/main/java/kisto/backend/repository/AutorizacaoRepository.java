@@ -1,4 +1,4 @@
-package Repository;
+package kisto.backend.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

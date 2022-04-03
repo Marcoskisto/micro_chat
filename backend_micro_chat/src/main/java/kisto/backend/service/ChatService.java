@@ -1,4 +1,4 @@
-package Service;
+package kisto.backend.service;
 
 import java.util.Set;
 

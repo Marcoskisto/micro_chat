@@ -1,4 +1,4 @@
-package Service;
+package kisto.backend.service;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import Repository.AutorizacaoRepository;
-import Repository.UsuarioRepository;
 import kisto.backend.entity.Autorizacao;
 import kisto.backend.entity.Usuario;
+import kisto.backend.repository.AutorizacaoRepository;
+import kisto.backend.repository.UsuarioRepository;
 
 @Service("usuarioService")
 public class UsuarioServiceImp implements UsuarioService {

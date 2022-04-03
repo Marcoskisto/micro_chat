@@ -1,4 +1,4 @@
-package Service;
+package kisto.backend.service;
 
 import kisto.backend.entity.Autorizacao;
 import kisto.backend.entity.Usuario;
