@@ -1,6 +1,7 @@
 package kisto.backend.service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +88,11 @@ public class ChatServiceImp implements ChatService {
 		mensagem.setTexto(novoTexto);
 		mensagemRepo.save(mensagem);
 		return conversaRepo.findByMensagemsId(mensagemId);
+	}
+	
+	@Override
+	public List<Mensagem> buscaMensagensDeConversa(Long conversaId) {
+		return mensagemRepo.findByConversaId(conversaId);
 	}
 
 }

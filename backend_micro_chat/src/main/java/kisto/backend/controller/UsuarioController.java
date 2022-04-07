@@ -1,0 +1,55 @@
+package kisto.backend.controller;
+
+import java.util.HashSet;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.annotation.JsonView;
+
+import kisto.backend.dto.UsuarioDto;
+import kisto.backend.entity.Autorizacao;
+import kisto.backend.entity.Usuario;
+import kisto.backend.service.SecurityService;
+
+@RestController
+@RequestMapping(value = "/usuario")
+@CrossOrigin
+public class UsuarioController {
+	
+	@Autowired
+	public SecurityService usuarioService;
+	
+	@GetMapping(value = "/lista")
+	@JsonView(View.UsuarioLista.class)
+	public List<Usuario> recuperarTodosUsuarios() {
+		return usuarioService.recuperarTodosUsuarios();
+	}
+	
+	@GetMapping(value = "/{id}")
+	@JsonView(View.UsuarioDados.class)
+	public Usuario recuperaDadosDeUsuario(
+			@PathVariable("id") Long id) {
+		return usuarioService.getUsuario(id);
+	}
+	
+	
+	@PostMapping(value = "/cadastrar")
+	@JsonView(View.UsuarioDados.class)
+	public Usuario cadastraUsuario(@RequestBody UsuarioDto usuario){
+		
+		return usuarioService.cadastrarUsuario(
+				usuario.getNickname(),
+				usuario.getEmail(), 
+				usuario.getSenha(), 
+				usuario.getAutorizacoes()
+		);
+	}
+}

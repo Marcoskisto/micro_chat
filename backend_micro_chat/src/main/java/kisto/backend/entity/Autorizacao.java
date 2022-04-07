@@ -13,6 +13,10 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
+import kisto.backend.controller.View;
+
 @Entity
 @Table(name="aut_autorizacao")
 public class Autorizacao {
@@ -23,15 +27,14 @@ public class Autorizacao {
 	private Long id;
 	
 	@Column(name = "aut_nome", unique = true, length = 20, nullable = false)
+	@JsonView({View.UsuarioDados.class})
 	private String nome;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "aua_autorizacao_usuario",
-		joinColumns = { @JoinColumn(name = "aua_aut_id") },
-		inverseJoinColumns = { @JoinColumn(name = "aua_usr_id") })
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "autorizacoes")
 	private Set<Usuario> usuarios;
 	
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+	
 }

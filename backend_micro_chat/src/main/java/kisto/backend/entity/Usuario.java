@@ -15,6 +15,11 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+
+import kisto.backend.controller.View;
+
 
 @Entity
 @Table(name = "usr_usuario")
@@ -23,12 +28,17 @@ public class Usuario {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "usr_id")
+	@JsonView({View.UsuarioLista.class, View.UsuarioDados.class, 
+		View.ConversaLista.class, View.MensagemLeitura.class})
 	private Long id;
 	
 	@Column(name = "usr_nickname", unique = true, length = 20, nullable = false)
+	@JsonView({View.UsuarioLista.class, View.UsuarioDados.class, 
+		View.ConversaLista.class, View.MensagemLeitura.class})
 	private String nickname;
 	
 	@Column(name = "usr_email", unique = true, length = 40)
+	@JsonView({View.UsuarioDados.class})
 	private String email;
 	
 	@Column(name = "usr_senha", unique = true, length = 10)
@@ -38,12 +48,14 @@ public class Usuario {
 	@JoinTable(name = "aua_autorizacao_usuario",
 		joinColumns = { @JoinColumn(name = "aua_usr_id") },
 		inverseJoinColumns = { @JoinColumn(name = "aua_aut_id") })
+	@JsonView({View.UsuarioDados.class})
 	private Set<Autorizacao> autorizacoes;	
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "ucu_conversa_usuario",
 		joinColumns = { @JoinColumn(name = "ucu_usr_id") },
 		inverseJoinColumns = { @JoinColumn(name = "ucu_cnv_id") })
+	@JsonIgnore
 	private Set<Conversa> conversas;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "remetente")
@@ -74,7 +86,21 @@ public class Usuario {
 		this.autorizacoes.add(autorizacao);
 	}
 
+	
+	public Long getId() {
+		return this.id;
+	}
+	public String getNickname() {
+		return this.nickname;
+	}
+	public String getEmail() {
+		return this.email;
+	}
 	public Set<Conversa> getConversas() {
 		return this.conversas;
 	}
+	public Set<Mensagem> getMensagems(){
+		return this.mensagems;
+	}
+
 }

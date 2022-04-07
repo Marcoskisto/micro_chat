@@ -1,6 +1,7 @@
 package kisto.backend.service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import kisto.backend.repository.AutorizacaoRepository;
 import kisto.backend.repository.UsuarioRepository;
 
 @Service("usuarioService")
-public class UsuarioServiceImp implements UsuarioService {
+public class SecurityServiceImp implements SecurityService {
 	@Autowired
 	private AutorizacaoRepository autorizacaoRepo;
 	
@@ -33,19 +34,22 @@ public class UsuarioServiceImp implements UsuarioService {
 	
 	@Override
 	@Transactional
-	public Usuario cadastrarUsuario(String nickname, String email, String senha, String nomeAutorizacao) {
-		
-		Autorizacao autorizacao = this.cadastrarAutorizacao(nomeAutorizacao);
+	public Usuario cadastrarUsuario(
+			String nickname, String email, 
+			String senha, List<String> autorizacoesNomes) {
+
 		Usuario usuario = new Usuario();
 		usuario.setNickname(nickname);
 		usuario.setEmail(email);
 		usuario.setSenha(senha);
 		usuario.setAutorizacoes(new HashSet<Autorizacao>());
-		usuario.addAutorizacao(autorizacao);
+		
+		for(String nome: autorizacoesNomes) {
+			Autorizacao autorizacao = this.cadastrarAutorizacao(nome);			
+			usuario.addAutorizacao(autorizacao);
+		}
 		usuarioRepo.save(usuario);
-		
 		return usuario;
-		
 	}
 
 	@Override
@@ -66,6 +70,14 @@ public class UsuarioServiceImp implements UsuarioService {
 		
 		return usuario;
 	}
-	
 
+	@Override
+	public List<Usuario> recuperarTodosUsuarios() {
+		return usuarioRepo.findAll();
+	}
+
+	@Override
+	public Usuario getUsuario(Long id) {
+		return usuarioRepo.findById(id).get();
+	}
 }

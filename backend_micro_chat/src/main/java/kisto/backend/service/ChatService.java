@@ -1,5 +1,6 @@
 package kisto.backend.service;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ public interface ChatService {
 	public Conversa exluirMensagem(Long mensagemId);
 	
 	public Conversa corrigirMensagem(Long mensagemId, String novoTexto);
+
+	public List<Mensagem> buscaMensagensDeConversa(Long conversaId);
 
 	
 }
