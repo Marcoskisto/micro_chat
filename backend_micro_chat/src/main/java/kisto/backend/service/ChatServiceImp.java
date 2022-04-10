@@ -57,6 +57,7 @@ public class ChatServiceImp implements ChatService {
 		Mensagem mensagem = new Mensagem();
 		mensagem.setRemetente(remetente);
 		mensagem.setConversa(conversa);
+		mensagem.setTexto(texto);
 		
 		mensagemRepo.save(mensagem);
 		
@@ -74,12 +75,10 @@ public class ChatServiceImp implements ChatService {
 	}
 
 	@Override
-	public Conversa exluirMensagem(Long mensagemId) {		
+	public void exlcuirMensagem(Long mensagemId) {		
 		Mensagem mensagem = mensagemRepo.findById(mensagemId).get();
 		Long conversaId = mensagem.getConversa().getId();
 		mensagemRepo.delete(mensagem);
-		return conversaRepo.findById(conversaId).get();
-
 	}
 
 	@Override

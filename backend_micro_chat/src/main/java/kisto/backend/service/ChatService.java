@@ -21,11 +21,12 @@ public interface ChatService {
 		
 	public Set<Usuario> getUsuariosDeConversa(Long conversaId);
 	
-	public Conversa exluirMensagem(Long mensagemId);
+	public void exlcuirMensagem(Long mensagemId);
 	
 	public Conversa corrigirMensagem(Long mensagemId, String novoTexto);
 
 	public List<Mensagem> buscaMensagensDeConversa(Long conversaId);
+
 
 	
 }

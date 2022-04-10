@@ -1,6 +1,5 @@
 package kisto.backend.controller;
 
-import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,25 +14,24 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import kisto.backend.dto.UsuarioDto;
-import kisto.backend.entity.Autorizacao;
 import kisto.backend.entity.Usuario;
 import kisto.backend.service.SecurityService;
 
 @RestController
-@RequestMapping(value = "/usuario")
+@RequestMapping(value = "/usuario/")
 @CrossOrigin
 public class UsuarioController {
 	
 	@Autowired
 	public SecurityService usuarioService;
 	
-	@GetMapping(value = "/lista")
+	@GetMapping(value = "lista")
 	@JsonView(View.UsuarioLista.class)
 	public List<Usuario> recuperarTodosUsuarios() {
 		return usuarioService.recuperarTodosUsuarios();
 	}
 	
-	@GetMapping(value = "/{id}")
+	@GetMapping(value = "{id}")
 	@JsonView(View.UsuarioDados.class)
 	public Usuario recuperaDadosDeUsuario(
 			@PathVariable("id") Long id) {
@@ -41,7 +39,7 @@ public class UsuarioController {
 	}
 	
 	
-	@PostMapping(value = "/cadastrar")
+	@PostMapping(value = "cadastrar")
 	@JsonView(View.UsuarioDados.class)
 	public Usuario cadastraUsuario(@RequestBody UsuarioDto usuario){
 		
