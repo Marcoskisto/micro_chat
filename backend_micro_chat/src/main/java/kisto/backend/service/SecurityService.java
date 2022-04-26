@@ -6,6 +6,7 @@ import java.util.Set;
 import kisto.backend.dto.AutorizacaoDto;
 import kisto.backend.entity.Autorizacao;
 import kisto.backend.entity.Usuario;
+import kisto.backend.exceptions.UsuarioJaCadastradoException;
 
 public interface SecurityService {
 	
@@ -13,7 +14,7 @@ public interface SecurityService {
 	
 	public Usuario cadastrarUsuario(
 			String nickname, String email, String senha, 
-			List<String> autorizacoesNomes);
+			List<String> autorizacoesNomes) throws UsuarioJaCadastradoException;
 	
 	public Usuario atribuirAutorizacao(Long usuarioId, String nomeAutorizacao);
 	

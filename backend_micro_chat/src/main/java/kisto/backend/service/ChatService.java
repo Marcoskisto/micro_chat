@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import kisto.backend.entity.Conversa;
 import kisto.backend.entity.Mensagem;
 import kisto.backend.entity.Usuario;
+import kisto.backend.exceptions.UsuarioForaDaconversaException;
 import utils.TipoDeConversa;
 
 @Service("chatService")
@@ -15,7 +16,7 @@ public interface ChatService {
 	
 	public Conversa criarConversa(String assunto, TipoDeConversa tipo, Set<Long> usuariosId);
 	
-	public Mensagem enviarMensagem(Long usuarioId, Long conversaId, String texto);
+	public Mensagem enviarMensagem(Long usuarioId, Long conversaId, String texto) throws UsuarioForaDaconversaException;
 	
 	public Set<Conversa> getConversasDeUsuario(Long usuarioId);
 		
@@ -27,6 +28,9 @@ public interface ChatService {
 
 	public List<Mensagem> buscaMensagensDeConversa(Long conversaId);
 
+	public Conversa atualizaAssuntoDaConversa(Long id, String assunto);
+
+	public Conversa adicionaUsuarioNaConversa(Long conversaId, Long usuarioId);
 
 	
 }

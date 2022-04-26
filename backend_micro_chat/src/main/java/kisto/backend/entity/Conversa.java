@@ -26,7 +26,7 @@ public class Conversa {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "cnv_id")
-	@JsonView({View.ConversaLista.class})
+	@JsonView({View.ConversaLista.class, View.ConversaUsuarios.class})
 	private Long id;
 	
 	@Column(name = "cnv_assunto", unique = true, length = 20, nullable = false)
@@ -39,7 +39,7 @@ public class Conversa {
 	private TipoDeConversa tipo;
 	
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "conversas")
-	@JsonView({View.ConversaLista.class})
+	@JsonView({View.ConversaUsuarios.class})
 	private Set<Usuario> usuarios;	
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "conversa")

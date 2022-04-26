@@ -1,5 +1,6 @@
 package kisto.backend.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -34,7 +35,7 @@ public class Mensagem {
 	@JsonView(View.MensagemLeitura.class)
 	private Usuario remetente;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "msg_conversa_id")
 	private Conversa conversa;
 

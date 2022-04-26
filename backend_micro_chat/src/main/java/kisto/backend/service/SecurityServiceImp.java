@@ -1,6 +1,7 @@
 package kisto.backend.service;
 
 import java.util.HashSet;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +13,8 @@ import kisto.backend.entity.Autorizacao;
 import kisto.backend.entity.Usuario;
 import kisto.backend.repository.AutorizacaoRepository;
 import kisto.backend.repository.UsuarioRepository;
+import kisto.backend.exceptions.UsuarioJaCadastradoException;;
+
 
 @Service("usuarioService")
 public class SecurityServiceImp implements SecurityService {
@@ -36,8 +39,11 @@ public class SecurityServiceImp implements SecurityService {
 	@Transactional
 	public Usuario cadastrarUsuario(
 			String nickname, String email, 
-			String senha, List<String> autorizacoesNomes) {
+			String senha, List<String> autorizacoesNomes) throws UsuarioJaCadastradoException {
 
+		if(usuarioRepo.findByNickname(nickname) != null) {
+			throw new UsuarioJaCadastradoException();
+		}
 		Usuario usuario = new Usuario();
 		usuario.setNickname(nickname);
 		usuario.setEmail(email);

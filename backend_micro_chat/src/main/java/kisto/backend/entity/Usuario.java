@@ -29,12 +29,12 @@ public class Usuario {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "usr_id")
 	@JsonView({View.UsuarioLista.class, View.UsuarioDados.class,
-		View.ConversaLista.class, View.MensagemLeitura.class})
+		View.MensagemLeitura.class, View.ConversaUsuarios.class})
 	private Long id;
 	
 	@Column(name = "usr_nickname", unique = true, length = 20, nullable = false)
 	@JsonView({View.UsuarioLista.class, View.UsuarioDados.class, 
-		View.ConversaLista.class, View.MensagemLeitura.class})
+		View.MensagemLeitura.class, View.ConversaUsuarios.class})
 	private String nickname;
 	
 	@Column(name = "usr_email", unique = true, length = 40)

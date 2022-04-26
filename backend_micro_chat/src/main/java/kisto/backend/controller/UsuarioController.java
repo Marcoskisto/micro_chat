@@ -3,6 +3,8 @@ package kisto.backend.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import kisto.backend.dto.UsuarioDto;
+import kisto.backend.entity.Mensagem;
 import kisto.backend.entity.Usuario;
+import kisto.backend.exceptions.UsuarioJaCadastradoException;
 import kisto.backend.service.SecurityService;
 
 @RestController
@@ -41,13 +45,20 @@ public class UsuarioController {
 	
 	@PostMapping(value = "cadastrar")
 	@JsonView(View.UsuarioDados.class)
-	public Usuario cadastraUsuario(@RequestBody UsuarioDto usuario){
+	public ResponseEntity<Usuario> cadastraUsuario(@RequestBody UsuarioDto usuario){
 		
-		return usuarioService.cadastrarUsuario(
-				usuario.getNickname(),
-				usuario.getEmail(), 
-				usuario.getSenha(), 
-				usuario.getAutorizacoes()
-		);
+		try {
+			Usuario usuarioCadastrado = usuarioService.cadastrarUsuario(
+					usuario.getNickname(),
+					usuario.getEmail(), 
+					usuario.getSenha(), 
+					usuario.getAutorizacoes()
+					);
+			
+			return new ResponseEntity<Usuario>(usuarioCadastrado, HttpStatus.OK);
+			
+		} catch (UsuarioJaCadastradoException e) {
+			return new ResponseEntity<Usuario>(HttpStatus.CONFLICT);
+		}
 	}
 }

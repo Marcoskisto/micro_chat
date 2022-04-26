@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import kisto.backend.entity.Conversa;
 import kisto.backend.entity.Mensagem;
 import kisto.backend.entity.Usuario;
+import kisto.backend.exceptions.UsuarioForaDaconversaException;
 import kisto.backend.repository.ConversaRepository;
 import kisto.backend.repository.MensagemRepository;
 import kisto.backend.repository.UsuarioRepository;
@@ -50,9 +51,13 @@ public class ChatServiceImp implements ChatService {
 	}
 
 	@Override
-	public Mensagem enviarMensagem(Long usuarioId, Long conversaId, String texto) {
+	public Mensagem enviarMensagem(Long usuarioId, Long conversaId, String texto) throws UsuarioForaDaconversaException {
 		Usuario remetente = usuarioRepo.findById(usuarioId).get();
 		Conversa conversa = conversaRepo.findById(conversaId).get();
+		
+		if (!conversa.getUsuarios().contains(remetente)) {
+			throw new UsuarioForaDaconversaException();
+		}
 				
 		Mensagem mensagem = new Mensagem();
 		mensagem.setRemetente(remetente);
@@ -92,6 +97,32 @@ public class ChatServiceImp implements ChatService {
 	@Override
 	public List<Mensagem> buscaMensagensDeConversa(Long conversaId) {
 		return mensagemRepo.findByConversaId(conversaId);
+	}
+	
+	@Override
+	public Conversa atualizaAssuntoDaConversa(Long id, String assunto) {
+		Conversa conversa = conversaRepo.findById(id).get();
+		conversa.setAssunto(assunto);
+		return conversaRepo.save(conversa);
+	}
+
+	@Override
+	public Conversa adicionaUsuarioNaConversa(Long conversaId, Long usuarioId) {
+		Conversa conversa = conversaRepo.findById(conversaId).get();
+		Usuario usuario = usuarioRepo.findById(conversaId).get();
+		Set<Usuario> usuarios = conversa.getUsuarios();
+		usuarios.add(usuario);
+		conversa.setUsuarios(usuarios);
+		return conversaRepo.save(conversa);
+	}
+
+	public Conversa removeUsuarioDaConversa(Long conversaId, Long usuarioId) {
+		Conversa conversa = conversaRepo.findById(conversaId).get();
+		Usuario usuario = usuarioRepo.findById(usuarioId).get();
+		Set<Usuario> usuarios = conversa.getUsuarios();
+		usuarios.remove(usuario);
+		conversa.setUsuarios(usuarios);
+		return conversaRepo.save(conversa);
 	}
 
 }
