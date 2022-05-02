@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import kisto.backend.dto.ConversaDto;
 import kisto.backend.dto.UsuarioDto;
 import kisto.backend.entity.Conversa;
+import kisto.backend.enums.ConversaTipo;
 import kisto.backend.service.ChatServiceImp;
 
 @RestController
@@ -33,7 +35,26 @@ public class ConversaController {
 		
 		return chatService.getConversasDeUsuario(usuarioId);
 	}
-
+	
+	@GetMapping(value = "listar_por_tipo/{tipo}/usuario/{usuarioId}")
+	@JsonView(View.ConversaLista.class)
+	public Set<Conversa> listarConversasDeUsuarioPorTipo(
+			@PathVariable("tipo") String tipo,
+			@PathVariable("usuarioId") Long usuarioId){
+				ConversaTipo conversaTipo = ConversaTipo.valueOf(tipo);
+				return chatService.getConversasDeUsuarioPorTipo(conversaTipo, usuarioId);
+	}
+	
+	@PostMapping(value = "criar")
+	@JsonView({View.ConversaUsuarioCompleta.class})
+	public Conversa criaNovaConversa(@RequestBody ConversaDto conversa) {
+		
+		return chatService.criarConversa(
+				conversa.getAssunto(), 
+				conversa.getTipo(), 
+				conversa.getUsuarios()
+			);
+	}
 	
 	@PutMapping(value = "assunto/{conversaId}")
 	public Conversa atualizaAssuntoDaConversa(
@@ -45,12 +66,12 @@ public class ConversaController {
 				);
 	}
 	
-	@PutMapping(value = "adicionarUsuario/{conversaId}")
-	@JsonView(View.ConversaUsuarios.class)
-	public Conversa adicionarUsuario(
-			@PathVariable("conversaId") Long conversaId, @RequestBody UsuarioDto usuario) {
+	@PutMapping(value = "adicionarUsuarios/{conversaId}")
+	@JsonView(View.ConversaUsuarioCompleta.class)
+	public Conversa adicionarUsuarios(
+			@RequestBody ConversaDto conversa) {
 		
-		return chatService.adicionaUsuarioNaConversa(conversaId, usuario.getId());	
+		return chatService.adicionarUsuariosNaConversa(conversa.getId(), conversa.getUsuarios());	
 	}
 	
 	@PutMapping(value = "removerUsuario/{conversaId}")

@@ -2,12 +2,12 @@ package kisto.backend.dto;
 
 import java.util.Set;
 
-import utils.TipoDeConversa;
+import kisto.backend.enums.ConversaTipo;
 
 public class ConversaDto {
 	private Long id;
 	private String assunto;
-	private TipoDeConversa tipo;
+	private ConversaTipo tipo;
 	private Set<MensagemDto> mensagems;
 	private Set<UsuarioDto> usuarios;
 	public Long getId() {
@@ -22,10 +22,10 @@ public class ConversaDto {
 	public void setAssunto(String assunto) {
 		this.assunto = assunto;
 	}
-	public TipoDeConversa getTipo() {
+	public ConversaTipo getTipo() {
 		return tipo;
 	}
-	public void setTipo(TipoDeConversa tipo) {
+	public void setTipo(ConversaTipo tipo) {
 		this.tipo = tipo;
 	}
 	public Set<MensagemDto> getMensagems() {

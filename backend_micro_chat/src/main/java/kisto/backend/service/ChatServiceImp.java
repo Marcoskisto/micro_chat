@@ -5,19 +5,22 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import kisto.backend.dto.UsuarioDto;
 import kisto.backend.entity.Conversa;
 import kisto.backend.entity.Mensagem;
 import kisto.backend.entity.Usuario;
+import kisto.backend.enums.ConversaTipo;
 import kisto.backend.exceptions.UsuarioForaDaconversaException;
 import kisto.backend.repository.ConversaRepository;
 import kisto.backend.repository.MensagemRepository;
 import kisto.backend.repository.UsuarioRepository;
-import utils.TipoDeConversa;
 
 
 
+//@PreAuthorize("isAuthenticated()")
 @Service("chatService")
 public class ChatServiceImp implements ChatService {
 	
@@ -31,23 +34,21 @@ public class ChatServiceImp implements ChatService {
 	MensagemRepository mensagemRepo;
 	
 	@Override
-	public Conversa criarConversa(String assunto, TipoDeConversa tipo, Set<Long> usuarios) {
+	public Conversa criarConversa(String assunto, ConversaTipo tipo, Set<UsuarioDto> usuariosInclusao) {
 
 			Conversa conversa = new Conversa();
 			conversa.setAssunto(assunto);
-			conversaRepo.save(conversa);
+			conversa.setTipo(tipo);
 			
 			HashSet<Usuario> listaDeUsuarios = new HashSet<Usuario>();
-			for(Long id: usuarios) {
-				Usuario usuario = usuarioRepo.findById(id).get();
-				listaDeUsuarios.add(usuario);
+			for(UsuarioDto usuarioInclusao: usuariosInclusao) {
+				Usuario usuario = usuarioRepo.findById(usuarioInclusao.getId()).get();
+				listaDeUsuarios.add(usuario);				
 			}
-						
 			conversa.setUsuarios(listaDeUsuarios);
 			
 			conversaRepo.save(conversa);
 			return conversa;
-		
 	}
 
 	@Override
@@ -82,7 +83,6 @@ public class ChatServiceImp implements ChatService {
 	@Override
 	public void exlcuirMensagem(Long mensagemId) {		
 		Mensagem mensagem = mensagemRepo.findById(mensagemId).get();
-		Long conversaId = mensagem.getConversa().getId();
 		mensagemRepo.delete(mensagem);
 	}
 
@@ -107,15 +107,18 @@ public class ChatServiceImp implements ChatService {
 	}
 
 	@Override
-	public Conversa adicionaUsuarioNaConversa(Long conversaId, Long usuarioId) {
+	public Conversa adicionarUsuariosNaConversa(Long conversaId, Set<UsuarioDto> usuariosEmAdicao) {
 		Conversa conversa = conversaRepo.findById(conversaId).get();
-		Usuario usuario = usuarioRepo.findById(conversaId).get();
-		Set<Usuario> usuarios = conversa.getUsuarios();
-		usuarios.add(usuario);
-		conversa.setUsuarios(usuarios);
+		Set<Usuario> listaDeUsuarios = conversa.getUsuarios();
+		for(UsuarioDto usuarioDto: usuariosEmAdicao) {
+			Usuario usuario = usuarioRepo.findById(usuarioDto.getId()).get();
+			listaDeUsuarios.add(usuario);
+		}
+		conversa.setUsuarios(listaDeUsuarios);			
 		return conversaRepo.save(conversa);
 	}
-
+	
+	@Override
 	public Conversa removeUsuarioDaConversa(Long conversaId, Long usuarioId) {
 		Conversa conversa = conversaRepo.findById(conversaId).get();
 		Usuario usuario = usuarioRepo.findById(usuarioId).get();
@@ -123,6 +126,11 @@ public class ChatServiceImp implements ChatService {
 		usuarios.remove(usuario);
 		conversa.setUsuarios(usuarios);
 		return conversaRepo.save(conversa);
+	}
+	
+	@Override
+	public Set<Conversa> getConversasDeUsuarioPorTipo(ConversaTipo conversaTipo, Long usuarioId) {
+		return conversaRepo.findByTipoAndUsuariosId(conversaTipo, usuarioId);
 	}
 
 }

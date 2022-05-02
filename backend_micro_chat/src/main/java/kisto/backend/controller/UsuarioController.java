@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import kisto.backend.dto.UsuarioDto;
-import kisto.backend.entity.Mensagem;
 import kisto.backend.entity.Usuario;
 import kisto.backend.exceptions.UsuarioJaCadastradoException;
 import kisto.backend.service.SecurityService;
@@ -45,7 +44,7 @@ public class UsuarioController {
 	
 	@PostMapping(value = "cadastrar")
 	@JsonView(View.UsuarioDados.class)
-	public ResponseEntity<Usuario> cadastraUsuario(@RequestBody UsuarioDto usuario){
+	public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody UsuarioDto usuario){
 		
 		try {
 			Usuario usuarioCadastrado = usuarioService.cadastrarUsuario(

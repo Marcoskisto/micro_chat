@@ -9,6 +9,8 @@ public class View {
 	
 	public static class ConversaUsuarios{};
 	
+	public static class ConversaUsuarioCompleta{};
+	
 	public static class MensagemLeitura{};
 	
 }

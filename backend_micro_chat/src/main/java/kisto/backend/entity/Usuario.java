@@ -29,12 +29,14 @@ public class Usuario {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "usr_id")
 	@JsonView({View.UsuarioLista.class, View.UsuarioDados.class,
-		View.MensagemLeitura.class, View.ConversaUsuarios.class})
+		View.MensagemLeitura.class, View.ConversaUsuarios.class,
+		View.ConversaUsuarioCompleta.class})
 	private Long id;
 	
 	@Column(name = "usr_nickname", unique = true, length = 20, nullable = false)
 	@JsonView({View.UsuarioLista.class, View.UsuarioDados.class, 
-		View.MensagemLeitura.class, View.ConversaUsuarios.class})
+		View.MensagemLeitura.class, View.ConversaUsuarios.class, 
+		View.ConversaUsuarioCompleta.class})
 	private String nickname;
 	
 	@Column(name = "usr_email", unique = true, length = 40)
@@ -51,11 +53,8 @@ public class Usuario {
 	@JsonView({View.UsuarioDados.class})
 	private Set<Autorizacao> autorizacoes;	
 	
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "ucu_conversa_usuario",
-		joinColumns = { @JoinColumn(name = "ucu_usr_id") },
-		inverseJoinColumns = { @JoinColumn(name = "ucu_cnv_id") })
-	@JsonIgnore
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "usuarios")
+	@JsonView({View.UsuarioDados.class})
 	private Set<Conversa> conversas;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "remetente")
@@ -86,7 +85,6 @@ public class Usuario {
 		this.autorizacoes.add(autorizacao);
 	}
 
-	
 	public Long getId() {
 		return this.id;
 	}

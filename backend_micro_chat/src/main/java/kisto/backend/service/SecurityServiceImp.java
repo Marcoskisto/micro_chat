@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,6 +59,7 @@ public class SecurityServiceImp implements SecurityService {
 		return usuario;
 	}
 
+	@PreAuthorize("isAuthenticated")
 	@Override
 	@Transactional
 	public Usuario atribuirAutorizacao(Long usuarioId, String nomeAutorizacao) {
@@ -65,23 +67,27 @@ public class SecurityServiceImp implements SecurityService {
 
 		Autorizacao autorizacao = this.cadastrarAutorizacao(nomeAutorizacao);
 		usuario.addAutorizacao(autorizacao);
+		usuarioRepo.save(usuario);
 		return usuario;
 	}
 
+	@PreAuthorize("isAuthenticated")
 	@Override
 	public Usuario revogarAutorizacao(Long usuarioId, Long autorizacaoId) {
 		Usuario usuario = usuarioRepo.findById(usuarioId).get();
-		Optional<Autorizacao> autorizacao = autorizacaoRepo.findById(autorizacaoId);
+		Autorizacao autorizacao = autorizacaoRepo.findById(autorizacaoId).get();
 		usuario.getAutorizacoes().remove(autorizacao);
 		
 		return usuario;
 	}
 
+	@PreAuthorize("isAuthenticated")
 	@Override
 	public List<Usuario> recuperarTodosUsuarios() {
 		return usuarioRepo.findAll();
 	}
 
+	@PreAuthorize("isAuthenticated")
 	@Override
 	public Usuario getUsuario(Long id) {
 		return usuarioRepo.findById(id).get();
