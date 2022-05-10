@@ -3,6 +3,8 @@ package kisto.backend.controller;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import kisto.backend.dto.ConversaDto;
 import kisto.backend.dto.UsuarioDto;
 import kisto.backend.entity.Conversa;
+import kisto.backend.entity.Mensagem;
 import kisto.backend.enums.ConversaTipo;
 import kisto.backend.service.ChatServiceImp;
 
@@ -27,6 +30,14 @@ public class ConversaController {
 	
 	@Autowired
 	public ChatServiceImp chatService;
+	
+	@GetMapping(value="{conversaId}")
+	@JsonView(View.ConversaCompleta.class)
+	public ResponseEntity<Conversa> getDadosConversa(
+			@PathVariable("conversaId") Long conversaId){
+		Conversa conversa = chatService.getConversa(conversaId);
+		return new ResponseEntity<Conversa>(conversa, HttpStatus.OK);
+	}
 	
 	@GetMapping(value = "listar_por_usuario/{usuarioId}")
 	@JsonView(View.ConversaLista.class)

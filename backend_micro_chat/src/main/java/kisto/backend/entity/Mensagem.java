@@ -23,16 +23,16 @@ public class Mensagem {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "msg_id")
-	@JsonView(View.MensagemLeitura.class)
+	@JsonView({View.MensagemLeitura.class, View.ConversaCompleta.class})
 	private Long id;
 	
 	@Column(name = "msg_texto", length = 100, nullable = false)
-	@JsonView(View.MensagemLeitura.class)
+	@JsonView({View.MensagemLeitura.class, View.ConversaCompleta.class})
 	private String texto;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "msg_remetente_id")
-	@JsonView(View.MensagemLeitura.class)
+	@JsonView({View.MensagemLeitura.class, View.ConversaCompleta.class})
 	private Usuario remetente;
 	
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)

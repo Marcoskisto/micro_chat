@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import kisto.backend.dto.UsuarioDto;
 import kisto.backend.entity.Usuario;
 import kisto.backend.exceptions.UsuarioJaCadastradoException;
-import kisto.backend.service.SecurityService;
+import kisto.backend.service.UsuarioService;
 
 @RestController
 @RequestMapping(value = "/usuario/")
@@ -26,7 +26,7 @@ import kisto.backend.service.SecurityService;
 public class UsuarioController {
 	
 	@Autowired
-	public SecurityService usuarioService;
+	public UsuarioService usuarioService;
 	
 	@GetMapping(value = "lista")
 	@JsonView(View.UsuarioLista.class)

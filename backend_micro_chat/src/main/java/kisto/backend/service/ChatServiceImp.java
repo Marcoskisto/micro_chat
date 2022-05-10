@@ -7,6 +7,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kisto.backend.dto.UsuarioDto;
 import kisto.backend.entity.Conversa;
@@ -19,8 +20,6 @@ import kisto.backend.repository.MensagemRepository;
 import kisto.backend.repository.UsuarioRepository;
 
 
-
-//@PreAuthorize("isAuthenticated()")
 @Service("chatService")
 public class ChatServiceImp implements ChatService {
 	
@@ -33,6 +32,7 @@ public class ChatServiceImp implements ChatService {
 	@Autowired
 	MensagemRepository mensagemRepo;
 	
+	@PreAuthorize("isAuthenticated")
 	@Override
 	public Conversa criarConversa(String assunto, ConversaTipo tipo, Set<UsuarioDto> usuariosInclusao) {
 
@@ -50,14 +50,21 @@ public class ChatServiceImp implements ChatService {
 			conversaRepo.save(conversa);
 			return conversa;
 	}
-
+	
+	@PreAuthorize(
+			"@securityServiceImp.isUsuarioInConversa("
+			+ "authentication, #usuarioId, #conversaId)")
 	@Override
-	public Mensagem enviarMensagem(Long usuarioId, Long conversaId, String texto) throws UsuarioForaDaconversaException {
+	@Transactional
+	public Mensagem enviarMensagem(Long usuarioId, Long conversaId, String texto) {
 		Usuario remetente = usuarioRepo.findById(usuarioId).get();
 		Conversa conversa = conversaRepo.findById(conversaId).get();
 		
 		if (!conversa.getUsuarios().contains(remetente)) {
-			throw new UsuarioForaDaconversaException();
+			Set<Usuario> usuarios = conversa.getUsuarios();
+			usuarios.add(remetente);
+			conversa.setUsuarios(usuarios);
+			conversaRepo.save(conversa);
 		}
 				
 		Mensagem mensagem = new Mensagem();
@@ -69,23 +76,36 @@ public class ChatServiceImp implements ChatService {
 		
 		return mensagem;
 	}
-
+	
+	@PreAuthorize(
+			"hasRole('MODERADOR') or " +
+			"@securityServiceImp.isUsuarioInConversa(" +
+			"authentication, #usuarioId, #conversaId)")
 	@Override
 	public Set<Conversa> getConversasDeUsuario(Long usuarioId) {
 		return usuarioRepo.findById(usuarioId).get().getConversas();
 	}
-
+	
+	@PreAuthorize("isAuthenticated")
 	@Override
 	public Set<Usuario> getUsuariosDeConversa(Long conversaId) {
 		return conversaRepo.findById(conversaId).get().getUsuarios();
 	}
-
+	
+	@PreAuthorize(
+			"hasRole('MODERADOR') or " +
+			"@securityServiceImp.isUsuarioInConversa(" +
+			"authentication, #usuarioId, #conversaId)")
 	@Override
 	public void exlcuirMensagem(Long mensagemId) {		
 		Mensagem mensagem = mensagemRepo.findById(mensagemId).get();
 		mensagemRepo.delete(mensagem);
 	}
 
+	@PreAuthorize(
+			"hasRole('MODERADOR') or " +
+			"@securityServiceImp.isUsuarioInConversa(" +
+			"authentication, #usuarioId, #conversaId)")
 	@Override
 	public Conversa corrigirMensagem(Long mensagemId, String novoTexto) {
 		Mensagem mensagem = mensagemRepo.findById(mensagemId).get();
@@ -94,11 +114,13 @@ public class ChatServiceImp implements ChatService {
 		return conversaRepo.findByMensagemsId(mensagemId);
 	}
 	
+	@PreAuthorize("isAuthenticated")
 	@Override
 	public List<Mensagem> buscaMensagensDeConversa(Long conversaId) {
 		return mensagemRepo.findByConversaId(conversaId);
 	}
 	
+	@PreAuthorize("isAuthenticated")
 	@Override
 	public Conversa atualizaAssuntoDaConversa(Long id, String assunto) {
 		Conversa conversa = conversaRepo.findById(id).get();
@@ -106,6 +128,7 @@ public class ChatServiceImp implements ChatService {
 		return conversaRepo.save(conversa);
 	}
 
+	@PreAuthorize("isAuthenticated")
 	@Override
 	public Conversa adicionarUsuariosNaConversa(Long conversaId, Set<UsuarioDto> usuariosEmAdicao) {
 		Conversa conversa = conversaRepo.findById(conversaId).get();
@@ -118,6 +141,7 @@ public class ChatServiceImp implements ChatService {
 		return conversaRepo.save(conversa);
 	}
 	
+	@PreAuthorize("isAuthenticated")
 	@Override
 	public Conversa removeUsuarioDaConversa(Long conversaId, Long usuarioId) {
 		Conversa conversa = conversaRepo.findById(conversaId).get();
@@ -128,9 +152,17 @@ public class ChatServiceImp implements ChatService {
 		return conversaRepo.save(conversa);
 	}
 	
+	@PreAuthorize("isAuthenticated")
 	@Override
 	public Set<Conversa> getConversasDeUsuarioPorTipo(ConversaTipo conversaTipo, Long usuarioId) {
 		return conversaRepo.findByTipoAndUsuariosId(conversaTipo, usuarioId);
+	}
+	
+	@PreAuthorize("isAuthenticated")
+	@Override
+	public Conversa getConversa(Long conversaId) {
+		
+		return conversaRepo.findById(conversaId).get();
 	}
 
 }

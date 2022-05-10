@@ -28,26 +28,30 @@ public class Conversa {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "cnv_id")
-	@JsonView({View.ConversaLista.class, View.ConversaUsuarios.class, View.ConversaUsuarioCompleta.class})
+	@JsonView({View.ConversaLista.class, View.ConversaUsuarios.class, 
+		View.ConversaUsuarioCompleta.class, View.ConversaCompleta.class})
 	private Long id;
 	
 	@Column(name = "cnv_assunto", unique = true, length = 20, nullable = false)
-	@JsonView({View.ConversaLista.class, View.ConversaUsuarioCompleta.class})
+	@JsonView({View.ConversaLista.class, View.ConversaUsuarioCompleta.class, 
+		View.ConversaCompleta.class})
 	private String assunto;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "cnv_tipo")
-	@JsonView({View.ConversaLista.class, View.ConversaUsuarioCompleta.class})
+	@JsonView({View.ConversaLista.class, View.ConversaUsuarioCompleta.class, 
+		View.ConversaCompleta.class})
 	private ConversaTipo tipo;
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "ucu_conversa_usuario",
 		joinColumns = { @JoinColumn(name = "ucu_cnv_id") },
 		inverseJoinColumns = { @JoinColumn(name = "ucu_usr_id") })
-	@JsonView({View.ConversaUsuarioCompleta.class})
+	@JsonView({View.ConversaUsuarioCompleta.class, View.ConversaCompleta.class})
 	private Set<Usuario> usuarios;	
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "conversa")
+	@JsonView({View.ConversaCompleta.class})
 	private Set<Mensagem> mensagems;
 
 	

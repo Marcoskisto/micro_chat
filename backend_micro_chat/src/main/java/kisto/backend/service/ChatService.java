@@ -16,6 +16,8 @@ import kisto.backend.exceptions.UsuarioForaDaconversaException;
 @Service("chatService")
 public interface ChatService {
 	
+	public Conversa getConversa(Long conversaId);
+	
 	public Conversa criarConversa(String assunto, ConversaTipo tipo, Set<UsuarioDto> usuariosInclusao);
 
 	public Conversa atualizaAssuntoDaConversa(Long id, String assunto);
@@ -24,8 +26,8 @@ public interface ChatService {
 	
 	public Set<Usuario> getUsuariosDeConversa(Long conversaId);
 
-	public Mensagem enviarMensagem(Long usuarioId, Long conversaId, String texto) throws UsuarioForaDaconversaException;
-		
+	public Mensagem enviarMensagem(Long usuarioId, Long conversaId, String texto);
+			
 	public void exlcuirMensagem(Long mensagemId);
 	
 	public Conversa corrigirMensagem(Long mensagemId, String novoTexto);
@@ -37,4 +39,5 @@ public interface ChatService {
 	public Set<Conversa> getConversasDeUsuarioPorTipo(ConversaTipo conversaTipo, Long usuarioId);
 
 	public Conversa removeUsuarioDaConversa(Long conversaId, Long usuarioId);
+
 }

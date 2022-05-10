@@ -18,7 +18,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import kisto.backend.dto.MensagemDto;
 import kisto.backend.entity.Mensagem;
-import kisto.backend.exceptions.UsuarioForaDaconversaException;
 import kisto.backend.service.ChatServiceImp;
 
 @RestController
@@ -33,14 +32,12 @@ public class MensagemController {
 	@JsonView(View.MensagemLeitura.class)
 	public List<Mensagem> listarMensagemsDeConversa(
 			@PathVariable("conversaId") Long conversaId){
-		return chatService.buscaMensagensDeConversa(conversaId);
-		
+		return chatService.buscaMensagensDeConversa(conversaId);	
 	}
 	
 	@PostMapping(value = "enviar")
 	@JsonView(View.MensagemLeitura.class)
 	public ResponseEntity<Mensagem> enviarMensagem(@RequestBody MensagemDto mensagem) {
-		
 		try {
 			Mensagem msgEnviada = chatService.enviarMensagem(
 					mensagem.getRemetenteId(),
@@ -48,9 +45,9 @@ public class MensagemController {
 					mensagem.getTexto()
 					);
 			return new ResponseEntity<Mensagem>(msgEnviada, HttpStatus.OK);
-		} 
-		catch (UsuarioForaDaconversaException e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		catch(java.util.NoSuchElementException e){
+			return new ResponseEntity<Mensagem>(HttpStatus.CONFLICT);
 		}
 	}
 	
@@ -61,7 +58,7 @@ public class MensagemController {
 			return new ResponseEntity<>("Mensagem excluída", HttpStatus.OK);
 		}
 		catch (java.util.NoSuchElementException e) {
-			return new ResponseEntity<>("Mensagem inexistente",HttpStatus.OK);
+			return new ResponseEntity<>("Mensagem inexistente",HttpStatus.CONFLICT);
 		}
 	}
 }

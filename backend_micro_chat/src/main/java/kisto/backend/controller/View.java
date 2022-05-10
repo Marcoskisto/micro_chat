@@ -1,10 +1,13 @@
 package kisto.backend.controller;
 
 public class View {
+
 	public static class UsuarioLista {};
 	
 	public static class UsuarioDados {};
 	
+	public class ConversaCompleta {};
+
 	public static class ConversaLista{};
 	
 	public static class ConversaUsuarios{};

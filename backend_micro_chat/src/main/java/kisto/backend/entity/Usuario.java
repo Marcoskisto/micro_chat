@@ -30,13 +30,13 @@ public class Usuario {
 	@Column(name = "usr_id")
 	@JsonView({View.UsuarioLista.class, View.UsuarioDados.class,
 		View.MensagemLeitura.class, View.ConversaUsuarios.class,
-		View.ConversaUsuarioCompleta.class})
+		View.ConversaUsuarioCompleta.class, View.ConversaCompleta.class})
 	private Long id;
 	
 	@Column(name = "usr_nickname", unique = true, length = 20, nullable = false)
 	@JsonView({View.UsuarioLista.class, View.UsuarioDados.class, 
 		View.MensagemLeitura.class, View.ConversaUsuarios.class, 
-		View.ConversaUsuarioCompleta.class})
+		View.ConversaUsuarioCompleta.class, View.ConversaCompleta.class})
 	private String nickname;
 	
 	@Column(name = "usr_email", unique = true, length = 40)
@@ -99,6 +99,11 @@ public class Usuario {
 	}
 	public Set<Mensagem> getMensagems(){
 		return this.mensagems;
+	}
+
+	public String getSenha() {
+		// TODO Auto-generated method stub
+		return this.senha;
 	}
 
 }

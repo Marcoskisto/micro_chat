@@ -10,7 +10,7 @@ import kisto.backend.enums.ConversaTipo;
 public interface ConversaRepository extends JpaRepository<Conversa, Long> {
 	public Set<Conversa> findByUsuariosNickname(String nome);
 	
-	public Set<Conversa> findByUsuariosId(Long autorizacaoId);
+	public Set<Conversa> findByUsuariosId(Long usuarioId);
 
 	public Conversa findByAssunto(String assunto);
 
