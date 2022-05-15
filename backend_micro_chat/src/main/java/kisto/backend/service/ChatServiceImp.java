@@ -14,7 +14,6 @@ import kisto.backend.entity.Conversa;
 import kisto.backend.entity.Mensagem;
 import kisto.backend.entity.Usuario;
 import kisto.backend.enums.ConversaTipo;
-import kisto.backend.exceptions.UsuarioForaDaconversaException;
 import kisto.backend.repository.ConversaRepository;
 import kisto.backend.repository.MensagemRepository;
 import kisto.backend.repository.UsuarioRepository;
@@ -77,10 +76,7 @@ public class ChatServiceImp implements ChatService {
 		return mensagem;
 	}
 	
-	@PreAuthorize(
-			"hasRole('MODERADOR') or " +
-			"@securityServiceImp.isUsuarioInConversa(" +
-			"authentication, #usuarioId, #conversaId)")
+	@PreAuthorize("isAuthenticated")
 	@Override
 	public Set<Conversa> getConversasDeUsuario(Long usuarioId) {
 		return usuarioRepo.findById(usuarioId).get().getConversas();
@@ -92,10 +88,7 @@ public class ChatServiceImp implements ChatService {
 		return conversaRepo.findById(conversaId).get().getUsuarios();
 	}
 	
-	@PreAuthorize(
-			"hasRole('MODERADOR') or " +
-			"@securityServiceImp.isUsuarioInConversa(" +
-			"authentication, #usuarioId, #conversaId)")
+	@PreAuthorize("isAuthenticated")
 	@Override
 	public void exlcuirMensagem(Long mensagemId) {		
 		Mensagem mensagem = mensagemRepo.findById(mensagemId).get();
@@ -103,9 +96,7 @@ public class ChatServiceImp implements ChatService {
 	}
 
 	@PreAuthorize(
-			"hasRole('MODERADOR') or " +
-			"@securityServiceImp.isUsuarioInConversa(" +
-			"authentication, #usuarioId, #conversaId)")
+			"isAuthenticated")
 	@Override
 	public Conversa corrigirMensagem(Long mensagemId, String novoTexto) {
 		Mensagem mensagem = mensagemRepo.findById(mensagemId).get();
