@@ -9,20 +9,30 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import axios from "axios";
+const instance = axios.create({
+  baseURL: 'http://localhost:8080/microchat',
+  timeout: 10000,
+  params: {} // do not remove this, its added to add params later in the config
+});
 
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
 
-Vue.config.productionTip = false
-axios.interceptors.request.use(function (config) {
-  if (store.state.token !== null) {
-    config.headers!.Authorization = `Bearer ${store.state.token}`;
+instance.interceptors.request.use((config) => {
+  console.log('interceptor funcionando')
+  if (store.state.token) {
+    config.headers!["Authorization"] = 'Bearer ' + store.state.token;
   }
   return config
-})
-axios.interceptors.response.use(res => {
+},
+  (error) => {
+    return Promise.reject(error);
+  }
+)
+instance.interceptors.response.use((res) => {
+  console.log('interceptor responsefuncionando')
   return res
 }, error => {
   if (error.response.status === 403) {
@@ -30,13 +40,13 @@ axios.interceptors.response.use(res => {
   }
   else if (error.response.status === 401) {
     store.commit('logout')
-    router.push('/login')
+    router.push('/about')
   }
   throw error
 })
 
-axios.defaults.baseURL =
-  "https://localhost:8085/microchat";
+
+Vue.config.productionTip = false
 
 new Vue({
   router,

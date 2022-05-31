@@ -21,6 +21,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
       throws IOException, ServletException {
 
     try {
+      
       HttpServletRequest servletRequest = (HttpServletRequest) request;
       String authorization = servletRequest.getHeader(HttpHeaders.AUTHORIZATION);
       if (authorization != null) {
